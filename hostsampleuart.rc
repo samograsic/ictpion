@@ -1,0 +1,85 @@
+
+## begin ionadmin 
+
+# Initialization command (command 1). 
+#	Set this node to be node 1 (as in ipn:1).
+#	Use default sdr configuration (empty configuration file name '').
+1 82 ''
+
+# start ion node
+s
+
+a contact +1 +360000 82 82 100000
+a contact +1 +360000 81 81 100000
+a contact +1 +360000 81 82 100000
+a contact +1 +360000 82 81 100000
+a contact +1 +360000 82 83 100000
+a contact +1 +360000 83 82 100000
+a contact +1 +360000 82 20 100000
+a contact +1 +360000 20 82 100000
+
+a range +1 +360000 82 82 1
+a range +1 +360000 81 81 1
+a range +1 +360000 81 82 1
+a range +1 +360000 82 81 1
+a range +1 +360000 82 83 1
+a range +1 +360000 83 82 1
+a range +1 +360000 82 20 1
+a range +1 +360000 20 82 1
+
+
+# set this node to consume and produce a mean of 1000000 bytes/second.
+m production 1000000
+m consumption 1000000
+
+# Disable congestion forecasting
+m horizon +0
+## end ionadmin 
+
+## begin bpadmin 
+
+# Initialization command (command 1).
+1
+
+# Add an EID scheme.
+#	The scheme's name is ipn.
+#	The scheme's number is 1.  Note that this number is defined for
+#	Compressed Bundle Header Encoding (CBHE) schemes ONLY.  All other
+#	schemes (dtn for example) should use number -1.
+#	This scheme's forwarding engine is handled by the program 'ipnfw.'
+#	This scheme's administration program (acting as the custodian
+#	daemon) is 'ipnadminep.'
+
+a scheme ipn 'ipnfw' 'ipnadminep'
+a endpoint ipn:82.0 q
+a endpoint ipn:82.1 q
+a endpoint ipn:82.3 q
+a endpoint ipn:82.4 q
+a endpoint ipn:82.5 q
+a endpoint ipn:82.6 q
+
+# Add a protocol. 
+a protocol uart 1400 100
+
+# Add an induct. (listen)
+a induct uart /dev/ttyACM1,115200 uartcli
+
+# Add an outduct. (since one UDP socket can address any IP, use '*' 
+# for the destination address, then this clo can send to any udp cli)
+a outduct uart /dev/ttyACM1,115200 uartclo
+s
+## end bpadmin 
+
+## begin ipnadmin 
+
+# Add an egress plan.
+#	Bundles to be transmitted to element number 1 (that is, yourself).
+#	This element is named 'node1.'
+#	The plan is to queue for transmission (x) on protocol 'udp' using
+#	the outduct identified as '127.0.0.1:4556'.
+#a plan 81 udp/192.168.0.11:4556
+#a plan 83 udp/192.168.0.13:4556
+a plan 20 uart//dev/ttyACM1,115200
+
+
+## end ipnadmin 

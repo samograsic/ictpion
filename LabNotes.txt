@@ -1,0 +1,18 @@
+sudo apt update
+apt install git
+apt install autoconf
+
+git clone https://git.code.sf.net/p/ione/code ione-codecd ione-code
+
+cd ione-code
+git branch ione-1.1.0
+git checkout ione-1.1.0
+git pull origin ione-1.1.0
+aclocal 
+./configure
+
+·       make
+sudo make install
+sudo ldconfig
+ cd tests/limbo
+./dotest
